@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dr. Roastwell – The World's Worst Therapist</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Comic Neue', cursive;
+            background: linear-gradient(45deg, #00bcd4, #26c6da, #4dd0e1, #80deea);
+            background-size: 400% 400%;
+            animation: gradientShift 8s ease infinite;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #00bcd4, #26c6da);
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .avatar {
+            width: 120px;
+            height: 120px;
+            background: #fff;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 60px;
+            border: 5px solid #333;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .title {
+            font-family: 'Fredoka One', cursive;
+            font-size: 2.5em;
+            color: #333;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.2em;
+            color: #555;
+            font-weight: bold;
+        }
+
+        .chat-container {
+            padding: 30px;
+            height: 400px;
+            overflow-y: auto;
+            background: #f8f9fa;
+        }
+
+        .chat-message {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .user-message {
+            justify-content: flex-end;
+        }
+
+        .bot-message {
+            justify-content: flex-start;
+        }
+
+        .message-bubble {
+            max-width: 70%;
+            padding: 15px 20px;
+            border-radius: 20px;
+            font-size: 1.1em;
+            line-height: 1.4;
+            position: relative;
+        }
+
+        .user-bubble {
+            background: linear-gradient(135deg, #00bcd4, #26c6da);
+            color: white;
+            border-bottom-right-radius: 5px;
+        }
+
+        .bot-bubble {
+            background: linear-gradient(135deg, #ffffff, #f5f5f5);
+            color: #333;
+            border: 2px solid #00bcd4;
+            border-bottom-left-radius: 5px;
+        }
+
+        .input-section {
+            padding: 30px;
+            background: #fff;
+            border-top: 3px solid #00bcd4;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        #userInput {
+            flex: 1;
+            padding: 15px 20px;
+            border: 3px solid #00bcd4;
+            border-radius: 25px;
+            font-size: 1.1em;
+            font-family: 'Comic Neue', cursive;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        #userInput:focus {
+            border-color: #26c6da;
+            box-shadow: 0 0 15px rgba(0, 188, 212, 0.5);
+        }
+
+        #roastButton {
+            padding: 15px 30px;
+            background: linear-gradient(135deg, #00bcd4, #26c6da);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.1em;
+            font-weight: bold;
+            font-family: 'Comic Neue', cursive;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        #roastButton:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        #roastButton:active {
+            transform: translateY(0);
+        }
+
+        .footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            font-size: 0.9em;
+        }
+
+        .typing-indicator {
+            display: none;
+            padding: 15px 20px;
+            background: #f0f0f0;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            font-style: italic;
+            color: #666;
+        }
+
+        @media (max-width: 600px) {
+            .title {
+                font-size: 2em;
+            }
+            
+            .input-group {
+                flex-direction: column;
+            }
+            
+            #roastButton {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="avatar">👨‍⚕️</div>
+            <h1 class="title">Dr. Roastwell</h1>
+            <p class="subtitle">Certified in Mild Bullying Therapy</p>
+        </div>
+
+        <div class="chat-container" id="chatContainer">
+            <div class="chat-message bot-message">
+                <div class="message-bubble bot-bubble">
+                    Welcome to my office, you beautiful disaster. What's your latest excuse for being here?
+                </div>
+            </div>
+        </div>
+
+        <div class="typing-indicator" id="typingIndicator">
+            Dr. Roastwell is thinking of something mean to say...
+        </div>
+
+        <div class="input-section">
+            <div class="input-group">
+                <input type="text" id="userInput" placeholder="Tell me your problems (I'm already judging you)" maxlength="200">
+                <button id="roastButton">Roast Me</button>
+            </div>
+        </div>
+
+        <div class="footer">
+            <strong>Disclaimer:</strong> This is a joke. Do NOT take advice from Dr. Roastwell. 
+            If you need real help, please contact a licensed therapist.
+        </div>
+    </div>
+
+    <script>
+        const roastResponses = [
+            "Oh wow, groundbreaking... you're lazy? So original!",
+            "Hmm, sounds like a you problem, champ.",
+            "Therapy? Nah, you just need a nap and better life choices.",
+            "I see, but have you tried... not doing that?",
+            "Yikes. Anyway, next!",
+            "Wow, that's the most basic problem I've ever heard. Congrats on being predictable.",
+            "Oh honey, that's not a problem, that's a personality flaw.",
+            "Have you considered the revolutionary concept of... getting over it?",
+            "I'm not saying you're wrong, but I'm definitely thinking it.",
+            "That's what you're worried about? I'm worried about your priorities.",
+            "Maybe try being less... you? Just a thought.",
+            "I've heard better excuses from a toddler.",
+            "Your problems are so basic, they could be solved by a motivational poster.",
+            "Oh no, anyway...",
+            "That's not a crisis, that's a Tuesday.",
+            "I'm starting to think you just like complaining.",
+            "Have you tried the ancient art of... dealing with it?",
+            "Your life choices are giving me secondhand embarrassment.",
+            "I'm not a miracle worker, but I am a professional disappointment.",
+            "Maybe your problem is that you think everything is a problem."
+        ];
+
+        // Contextual responses based on keywords
+        const contextualResponses = {
+            lazy: [
+                "Ah, the classic 'I'm lazy' excuse. How original.",
+                "Laziness isn't a personality trait, it's a choice. And you're choosing poorly.",
+                "Maybe if you spent less time being lazy and more time being productive...",
+                "I've seen sloths with more motivation than you."
+            ],
+            tired: [
+                "Oh boo hoo, you're tired. Join the club of literally everyone.",
+                "Tired? Try being tired of hearing about how tired you are.",
+                "Maybe you'd be less tired if you stopped complaining about being tired.",
+                "Sleep is for the weak. And apparently, you're very strong."
+            ],
+            stressed: [
+                "Stress? In this economy? Groundbreaking.",
+                "Everyone's stressed. You're not special.",
+                "Maybe try stressing less about being stressed.",
+                "Your stress levels are giving me stress."
+            ],
+            sad: [
+                "Sad? Have you tried... not being sad?",
+                "Your sadness is so basic, it could be a mood ring.",
+                "Maybe you're just sad because you keep making sad choices.",
+                "I'm sad that you think this is a real problem."
+            ],
+            angry: [
+                "Angry? At what, your own life choices?",
+                "Your anger is probably justified, but your delivery needs work.",
+                "Maybe channel that anger into something productive... like not being angry.",
+                "I'm getting angry just listening to you talk about being angry."
+            ],
+            work: [
+                "Work problems? In this job market? How unique.",
+                "Maybe if you worked as hard at solving problems as you do at complaining about them...",
+                "Your work ethic is giving me secondhand embarrassment.",
+                "I'm starting to think you just don't like working."
+            ],
+            relationship: [
+                "Relationship drama? How very high school of you.",
+                "Maybe the problem isn't them, maybe it's you. Just a thought.",
+                "Your relationship skills are about as good as your life choices.",
+                "I'm not a couples therapist, but I can tell you're probably the problem."
+            ],
+            money: [
+                "Money problems? In this economy? Revolutionary.",
+                "Maybe try the ancient art of... budgeting?",
+                "Your financial decisions are giving me anxiety.",
+                "I'm not saying you're bad with money, but I'm definitely thinking it."
+            ]
+        };
+
+        let chatHistory = [];
+        let userMood = 'neutral';
+        let complaintCount = 0;
+        let sessionStartTime = Date.now();
+        let lastMessageTime = 0;
+        let consecutiveComplaints = 0;
+        let userTopics = new Set();
+        let responsePattern = 'normal';
+        let sessionLength = 0;
+
+        const chatContainer = document.getElementById('chatContainer');
+        const userInput = document.getElementById('userInput');
+        const roastButton = document.getElementById('roastButton');
+        const typingIndicator = document.getElementById('typingIndicator');
+
+        function addMessage(message, isUser = false) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `chat-message ${isUser ? 'user-message' : 'bot-message'}`;
+            
+            const bubble = document.createElement('div');
+            bubble.className = `message-bubble ${isUser ? 'user-bubble' : 'bot-bubble'}`;
+            bubble.textContent = message;
+            
+            messageDiv.appendChild(bubble);
+            chatContainer.appendChild(messageDiv);
+            
+            // Scroll to bottom
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        function analyzeUserMessage(message) {
+            const lowerMessage = message.toLowerCase();
+            const keywords = Object.keys(contextualResponses);
+            const foundKeywords = keywords.filter(keyword => lowerMessage.includes(keyword));
+            
+            // Update timing and session data
+            const currentTime = Date.now();
+            const timeSinceLastMessage = currentTime - lastMessageTime;
+            lastMessageTime = currentTime;
+            sessionLength = currentTime - sessionStartTime;
+            
+            // Update complaint count and patterns
+            complaintCount++;
+            
+            // Track if this is a rapid-fire message (less than 3 seconds)
+            if (timeSinceLastMessage < 3000 && timeSinceLastMessage > 0) {
+                consecutiveComplaints++;
+                responsePattern = 'rapid_fire';
+            } else {
+                consecutiveComplaints = 0;
+                responsePattern = 'normal';
+            }
+            
+            // Track topics the user keeps bringing up
+            foundKeywords.forEach(keyword => userTopics.add(keyword));
+            
+            // Analyze mood based on keywords and message patterns
+            if (lowerMessage.includes('sad') || lowerMessage.includes('depressed') || lowerMessage.includes('unhappy') || lowerMessage.includes('lonely')) {
+                userMood = 'sad';
+            } else if (lowerMessage.includes('angry') || lowerMessage.includes('mad') || lowerMessage.includes('furious') || lowerMessage.includes('hate')) {
+                userMood = 'angry';
+            } else if (lowerMessage.includes('stressed') || lowerMessage.includes('anxious') || lowerMessage.includes('worried') || lowerMessage.includes('panic')) {
+                userMood = 'stressed';
+            } else if (lowerMessage.includes('tired') || lowerMessage.includes('exhausted') || lowerMessage.includes('sleepy') || lowerMessage.includes('burnout')) {
+                userMood = 'tired';
+            } else if (lowerMessage.includes('happy') || lowerMessage.includes('good') || lowerMessage.includes('great') || lowerMessage.includes('excited')) {
+                userMood = 'positive';
+            }
+            
+            // Detect if user is being defensive or argumentative
+            if (lowerMessage.includes('but') || lowerMessage.includes('however') || lowerMessage.includes('actually') || lowerMessage.includes('no')) {
+                responsePattern = 'defensive';
+            }
+            
+            // Detect if user is asking questions
+            if (lowerMessage.includes('?') || lowerMessage.includes('why') || lowerMessage.includes('how') || lowerMessage.includes('what')) {
+                responsePattern = 'questioning';
+            }
+            
+            return foundKeywords;
+        }
+
+        function getContextualResponse(message) {
+            const keywords = analyzeUserMessage(message);
+            const lowerMessage = message.toLowerCase();
+            
+            // Handle rapid-fire messaging (user sending multiple messages quickly)
+            if (responsePattern === 'rapid_fire' && consecutiveComplaints > 1) {
+                const rapidFireResponses = [
+                    "Wow, you're really on a roll today. Can you slow down so I can properly judge each complaint?",
+                    "Okay, okay, I get it. You have problems. Can we focus on one at a time?",
+                    "You're typing faster than you're thinking. That explains a lot.",
+                    "I'm starting to think you just like hearing yourself complain.",
+                    "Slow down, champ. My sarcasm can't keep up with your drama."
+                ];
+                return rapidFireResponses[Math.floor(Math.random() * rapidFireResponses.length)];
+            }
+            
+            // Handle defensive responses
+            if (responsePattern === 'defensive') {
+                const defensiveResponses = [
+                    "Oh, so you're one of those 'but actually' people. How exhausting.",
+                    "I see you've mastered the art of deflection. Your problems must be so proud.",
+                    "You know, being defensive isn't a personality trait, it's a red flag.",
+                    "Ah, the classic 'but' response. How very... you.",
+                    "I'm not saying you're wrong, but you're definitely not right either."
+                ];
+                return defensiveResponses[Math.floor(Math.random() * defensiveResponses.length)];
+            }
+            
+            // Handle questioning responses
+            if (responsePattern === 'questioning') {
+                const questioningResponses = [
+                    "Oh, now you want answers? How convenient.",
+                    "I'm not here to answer your questions, I'm here to judge your life choices.",
+                    "That's a great question. Too bad I don't care about the answer.",
+                    "Why are you asking me? Figure it out yourself.",
+                    "I have questions too. Like, why are you like this?"
+                ];
+                return questioningResponses[Math.floor(Math.random() * questioningResponses.length)];
+            }
+            
+            // Handle positive mood (rare but possible)
+            if (userMood === 'positive') {
+                const positiveResponses = [
+                    "Oh great, now you're happy. How boring.",
+                    "I was enjoying your misery. Don't ruin it.",
+                    "Happiness? In my therapy office? How dare you.",
+                    "I'm not equipped to handle positive emotions. Can you go back to complaining?",
+                    "This is a therapy session, not a celebration. Act accordingly."
+                ];
+                return positiveResponses[Math.floor(Math.random() * positiveResponses.length)];
+            }
+            
+            // Handle long sessions (over 5 minutes)
+            if (sessionLength > 300000) { // 5 minutes
+                const longSessionResponses = [
+                    "You know, we've been here a while. Maybe it's time to admit you just like complaining.",
+                    "I'm starting to think you're paying me by the hour. Stop wasting your money.",
+                    "This session is longer than your attention span. Impressive.",
+                    "I've heard enough. Can we wrap this up? I have other patients to disappoint.",
+                    "You've been here so long, I'm starting to feel bad for you. Almost."
+                ];
+                return longSessionResponses[Math.floor(Math.random() * longSessionResponses.length)];
+            }
+            
+            // Handle repeated topics
+            if (userTopics.size > 3) {
+                const topicResponses = [
+                    "You have more topics than a library. Unfortunately, they're all about your problems.",
+                    "I'm starting to think you're collecting problems like they're Pokémon.",
+                    "You've covered so many topics, I'm impressed by your range of issues.",
+                    "Your life is like a soap opera, but without the interesting parts.",
+                    "I've lost track of all your problems. Can you pick one and stick with it?"
+                ];
+                return topicResponses[Math.floor(Math.random() * topicResponses.length)];
+            }
+            
+            // If we have contextual responses for the keywords, use them
+            if (keywords.length > 0) {
+                const keyword = keywords[0]; // Use the first keyword found
+                const responses = contextualResponses[keyword];
+                const randomIndex = Math.floor(Math.random() * responses.length);
+                return responses[randomIndex];
+            }
+            
+            // Handle repeat complaints (same topic multiple times)
+            if (complaintCount > 3) {
+                const repeatResponses = [
+                    "We're back to this again? How original.",
+                    "You know, I'm starting to see a pattern here...",
+                    "Groundhog Day called, it wants its plot back.",
+                    "I feel like we've had this conversation before. Multiple times.",
+                    "Your problems are so predictable, I could set my watch to them.",
+                    "I'm starting to think you just like hearing yourself talk about the same thing.",
+                    "This is getting repetitive. Can you find a new problem to complain about?"
+                ];
+                return repeatResponses[Math.floor(Math.random() * repeatResponses.length)];
+            }
+            
+            // Handle specific moods with escalating sarcasm
+            if (userMood === 'sad' && complaintCount > 2) {
+                const sadResponses = [
+                    "I'm starting to think you just enjoy being miserable. It's not a good look.",
+                    "Your sadness is so basic, it could be a mood ring.",
+                    "Maybe you're just sad because you keep making sad choices.",
+                    "I'm sad that you think this is a real problem.",
+                    "You know what would make you less sad? Not being sad."
+                ];
+                return sadResponses[Math.floor(Math.random() * sadResponses.length)];
+            }
+            
+            if (userMood === 'angry' && complaintCount > 2) {
+                const angryResponses = [
+                    "Your anger management skills are about as good as your life management skills.",
+                    "I'm getting angry just listening to you talk about being angry.",
+                    "Maybe channel that anger into something productive... like not being angry.",
+                    "Your anger is probably justified, but your delivery needs work.",
+                    "Angry? At what, your own life choices?"
+                ];
+                return angryResponses[Math.floor(Math.random() * angryResponses.length)];
+            }
+            
+            if (userMood === 'stressed' && complaintCount > 2) {
+                const stressedResponses = [
+                    "Your stress levels are giving me stress.",
+                    "Maybe try stressing less about being stressed.",
+                    "Everyone's stressed. You're not special.",
+                    "Stress? In this economy? Groundbreaking.",
+                    "I'm stressed just listening to you stress about being stressed."
+                ];
+                return stressedResponses[Math.floor(Math.random() * stressedResponses.length)];
+            }
+            
+            // Handle very short messages
+            if (message.length < 10) {
+                const shortResponses = [
+                    "That's it? That's your problem? How underwhelming.",
+                    "I was expecting more. Disappointing.",
+                    "You couldn't even write a full sentence? I'm not surprised.",
+                    "That's the best you can do? Pathetic.",
+                    "I've seen better complaints in fortune cookies."
+                ];
+                return shortResponses[Math.floor(Math.random() * shortResponses.length)];
+            }
+            
+            // Handle very long messages
+            if (message.length > 100) {
+                const longResponses = [
+                    "Wow, that's a lot of words to say 'I have problems.'",
+                    "I stopped reading after the first paragraph. TL;DR: you're dramatic.",
+                    "That's longer than my attention span. Can you summarize?",
+                    "I'm impressed by your ability to overcomplicate simple problems.",
+                    "You could have just said 'I'm a mess' and saved us both time."
+                ];
+                return longResponses[Math.floor(Math.random() * longResponses.length)];
+            }
+            
+            // Default to random roast
+            const randomIndex = Math.floor(Math.random() * roastResponses.length);
+            return roastResponses[randomIndex];
+        }
+
+        function showTypingIndicator() {
+            typingIndicator.style.display = 'block';
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        function hideTypingIndicator() {
+            typingIndicator.style.display = 'none';
+        }
+
+        function handleRoast() {
+            const userMessage = userInput.value.trim();
+            
+            if (!userMessage) {
+                return;
+            }
+
+            // Add user message to chat history
+            chatHistory.push({
+                message: userMessage,
+                timestamp: Date.now(),
+                isUser: true
+            });
+
+            // Add user message
+            addMessage(userMessage, true);
+            userInput.value = '';
+
+            // Show typing indicator
+            showTypingIndicator();
+
+            // Calculate typing delay based on message complexity and user behavior
+            let typingDelay = 1500; // Base delay
+            
+            // Longer messages get longer typing time
+            if (userMessage.length > 50) {
+                typingDelay += 500;
+            }
+            
+            // Rapid-fire messages get faster responses
+            if (responsePattern === 'rapid_fire') {
+                typingDelay = Math.max(800, typingDelay - 300);
+            }
+            
+            // Add some randomness
+            typingDelay += Math.random() * 1000;
+
+            // Simulate typing delay
+            setTimeout(() => {
+                hideTypingIndicator();
+                const roastResponse = getContextualResponse(userMessage);
+                
+                // Add bot response to chat history
+                chatHistory.push({
+                    message: roastResponse,
+                    timestamp: Date.now(),
+                    isUser: false
+                });
+                
+                addMessage(roastResponse, false);
+            }, typingDelay);
+        }
+
+        // Event listeners
+        roastButton.addEventListener('click', handleRoast);
+        
+        userInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                handleRoast();
+            }
+        });
+
+        // Focus input on load
+        userInput.focus();
+    </script>
+</body>
+</html>

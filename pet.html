@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Furry Grievances - Let your pet speak their mind</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&family=Patrick+Hand&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #e0f2f1 0%, #f3e5f5 100%);
+            min-height: 100vh;
+            color: #2c3e50;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 40px 0;
+        }
+
+        .header h1 {
+            font-size: 3.5rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #26a69a, #ff7043);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            color: #7f8c8d;
+            font-weight: 300;
+        }
+
+        .main-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: start;
+        }
+
+        .upload-section {
+            text-align: center;
+        }
+
+        .upload-area {
+            width: 200px;
+            height: 200px;
+            border: 3px dashed #26a69a;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .upload-area:hover {
+            border-color: #ff7043;
+            background: #fff3e0;
+            transform: scale(1.02);
+        }
+
+        .upload-area input[type="file"] {
+            display: none;
+        }
+
+        .upload-icon {
+            font-size: 3rem;
+            color: #26a69a;
+            transition: color 0.3s ease;
+        }
+
+        .upload-area:hover .upload-icon {
+            color: #ff7043;
+        }
+
+        .pet-photo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            display: none;
+        }
+
+        .upload-text {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+
+        .form-section {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group label {
+            font-weight: 500;
+            color: #2c3e50;
+            font-size: 1rem;
+        }
+
+        .form-group input,
+        .form-group select {
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #26a69a;
+            box-shadow: 0 0 0 3px rgba(38, 166, 154, 0.1);
+        }
+
+        .generate-btn {
+            background: linear-gradient(135deg, #26a69a, #ff7043);
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .generate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(38, 166, 154, 0.3);
+        }
+
+        .generate-btn:active {
+            transform: translateY(0);
+        }
+
+        .complaint-section {
+            display: none;
+            margin-top: 40px;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .complaint-letter {
+            background: linear-gradient(135deg, #fff9c4, #fff59d);
+            border: 2px solid #ffd54f;
+            border-radius: 15px;
+            padding: 30px;
+            font-family: 'Patrick Hand', cursive;
+            font-size: 1.2rem;
+            line-height: 1.8;
+            position: relative;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .complaint-letter::before {
+            content: "📝";
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            background: white;
+            padding: 8px 12px;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            border: 2px solid #ffd54f;
+        }
+
+        .another-btn {
+            background: linear-gradient(135deg, #ff7043, #26a69a);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .another-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 112, 67, 0.3);
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            color: #7f8c8d;
+            font-style: italic;
+        }
+
+        .loading::after {
+            content: "🐾";
+            animation: typing 1s infinite;
+        }
+
+        @keyframes typing {
+            0%, 50% { content: "🐾"; }
+            25% { content: "🐾🐾"; }
+            75% { content: "🐾🐾🐾"; }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+
+            .header h1 {
+                font-size: 2.5rem;
+            }
+
+            .main-card {
+                padding: 25px;
+            }
+
+            .content-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+
+            .upload-area {
+                width: 150px;
+                height: 150px;
+            }
+
+            .upload-icon {
+                font-size: 2.5rem;
+            }
+
+            .complaint-letter {
+                font-size: 1.1rem;
+                padding: 25px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .header p {
+                font-size: 1rem;
+            }
+
+            .main-card {
+                padding: 20px;
+            }
+
+            .upload-area {
+                width: 120px;
+                height: 120px;
+            }
+
+            .upload-icon {
+                font-size: 2rem;
+            }
+
+            .complaint-letter {
+                font-size: 1rem;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Paw Voices</h1>
+            <p>Let your pet speak their mind (kind of).</p>
+        </div>
+
+        <div class="main-card">
+            <div class="content-grid">
+                <div class="upload-section">
+                    <div class="upload-area" onclick="document.getElementById('petPhoto').click()">
+                        <div class="upload-icon">📷</div>
+                        <img id="petPhotoPreview" class="pet-photo" alt="Pet photo">
+                        <input type="file" id="petPhoto" accept="image/*">
+                    </div>
+                    <p class="upload-text">Click to upload your pet's photo</p>
+                </div>
+
+                <div class="form-section">
+                    <div class="form-group">
+                        <label for="petName">Pet's Name</label>
+                        <input type="text" id="petName" placeholder="Enter your pet's name" maxlength="20">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="petSpecies">Pet Species</label>
+                        <select id="petSpecies">
+                            <option value="">Select your pet type</option>
+                            <option value="dog">🐕 Dog</option>
+                            <option value="cat">🐱 Cat</option>
+                            <option value="bird">🐦 Bird</option>
+                            <option value="hamster">🐹 Hamster</option>
+                            <option value="rabbit">🐰 Rabbit</option>
+                            <option value="fish">🐠 Fish</option>
+                            <option value="turtle">🐢 Turtle</option>
+                            <option value="guinea pig">🐹 Guinea Pig</option>
+                            <option value="ferret">🦦 Ferret</option>
+                            <option value="other">🐾 Other</option>
+                        </select>
+                    </div>
+
+                    <button class="generate-btn" onclick="generateComplaint()">
+                        🐾 know what your pet has to say about you 🐾
+                    </button>
+                </div>
+            </div>
+
+            <div class="loading" id="loading">
+                Your pet is writing their complaint...
+            </div>
+
+            <div class="complaint-section" id="complaintSection">
+                <div class="complaint-letter" id="complaintLetter"></div>
+                <div style="text-align: center;">
+                    <button class="another-btn" onclick="generateComplaint()">
+                        🐾 Generate more 🐾
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <strong>Disclaimer:</strong> These complaints are AI-generated and for fun only.
+        </div>
+    </div>
+
+    <script>
+        const complaintTemplates = [
+            "Dear Human, stop calling me {petName}. I'm a {species}, not a joke. Also, why do you always take pictures when I'm sleeping? Rude! 🐾",
+            
+            "From: {petName} the {species}. Complaint: The vacuum is terrifying. Please retire it immediately. I'm not being dramatic, I'm being honest. 🐾",
+            
+            "Hey Human, you ate snacks without sharing. I saw it. Betrayal! I thought we had an agreement - you eat, I get some. {petName} demands justice! 🐾",
+            
+            "Dear Human, why do you always leave the house? Don't you know I'm here? And when you do come back, you smell like other {species}s. Suspicious. - {petName} 🐾",
+            
+            "Attention Human: I've been keeping a list of your offenses. 1) You wake me up early. 2) You don't share your pizza. 3) You laugh when I fall. This is unacceptable. - {petName} 🐾",
+            
+            "Hey Human, I've been thinking about our relationship. You feed me, but you also make me wear embarrassing costumes. I'm a {species}, not a fashion model. Love, {petName} 🐾",
+            
+            "From: {petName}. Subject: The Food Situation. Why do you get fresh food while I get the same kibble every day? I'm starting to think you don't love me. 🐾",
+            
+            "Dear Human, I have a bone to pick with you (pun intended). You keep saying 'good boy/girl' but I'm a {species}, not a child. Show some respect. - {petName} 🐾",
+            
+            "Attention Human: I've noticed you spend more time on your phone than playing with me. I'm a {species}, not a background decoration. Signed, {petName} 🐾",
+            
+            "Hey Human, why do you always talk to me in that baby voice? I'm a grown {species}. Also, stop posting my embarrassing photos on social media. - {petName} 🐾",
+            
+            "Dear Human, I have a complaint about the weather. You control the thermostat, but you never ask what temperature I prefer. I'm a {species}, I have needs too! - {petName} 🐾",
+            
+            "From: {petName}. Subject: Bath Time. Why do you insist on washing me when I'm perfectly clean? I groom myself, you know. I'm a {species}, not a human. 🐾",
+            
+            "Dear Human, I'm writing this complaint because you keep calling me 'cute' when I'm clearly majestic. I'm a {species}, not a stuffed animal. Show some respect. - {petName} 🐾",
+            
+            "Hey Human, I have a bone to pick with you. You keep saying 'who's a good {species}?' but you never wait for my answer. I am, obviously. - {petName} 🐾",
+            
+            "From: {petName}. Subject: The Toy Situation. You buy me toys, but then you don't play with me. What's the point? I'm a {species}, I need interaction! 🐾",
+            
+            "Dear Human, I've noticed you have a lot of rules for me but none for yourself. I can't jump on the couch, but you can? Double standards much? - {petName} 🐾",
+            
+            "Attention Human: I'm filing a formal complaint about the treat distribution system. Sometimes I get treats, sometimes I don't. I need consistency! - {petName} the {species} 🐾",
+            
+            "Hey Human, why do you always leave me alone when you go to work? Don't you know I have separation anxiety? I'm a {species}, not a robot. - {petName} 🐾",
+            
+            "Dear Human, I have a complaint about your music taste. You play loud music when I'm trying to nap. I'm a {species}, I need my beauty sleep! - {petName} 🐾",
+            
+            "From: {petName}. Subject: The Bed Situation. You hog the entire mattress while I'm stuck on the floor. Maybe share the bed for once? Signed, {petName} the {species}. P.S. Your snoring is worse than mine. 🐾"
+             
+        ];
+
+        function generateComplaint() {
+            const petName = document.getElementById('petName').value.trim();
+            const petSpecies = document.getElementById('petSpecies').value;
+            
+            if (!petName || !petSpecies) {
+                alert('Please enter your pet\'s name and select their species! 🐾');
+                return;
+            }
+
+            // Show loading
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('complaintSection').style.display = 'none';
+
+            // Simulate thinking time
+            setTimeout(() => {
+                // Hide loading
+                document.getElementById('loading').style.display = 'none';
+
+                // Generate random complaint
+                const randomTemplate = complaintTemplates[Math.floor(Math.random() * complaintTemplates.length)];
+                
+                // Replace placeholders
+                let complaint = randomTemplate
+                    .replace(/{petName}/g, petName)
+                    .replace(/{species}/g, petSpecies);
+
+                // Add some variety based on species
+                if (petSpecies === 'cat') {
+                    complaint += "\n\nP.S. I'm not being dramatic, I'm being a cat. There's a difference.";
+                } else if (petSpecies === 'dog') {
+                    complaint += "\n\nP.S. I still love you though. Can we go for a walk now?";
+                } else if (petSpecies === 'bird') {
+                    complaint += "\n\nP.S. *squawks indignantly*";
+                } else if (petSpecies === 'fish') {
+                    complaint += "\n\nP.S. *blub blub* (That means 'I'm serious' in fish language)";
+                }
+
+                // Display complaint
+                document.getElementById('complaintLetter').textContent = complaint;
+                document.getElementById('complaintSection').style.display = 'block';
+
+                // Scroll to complaint
+                document.getElementById('complaintSection').scrollIntoView({ behavior: 'smooth' });
+            }, 2000);
+        }
+
+        // Handle photo upload
+        document.getElementById('petPhoto').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const preview = document.getElementById('petPhotoPreview');
+                    const uploadIcon = document.querySelector('.upload-icon');
+                    
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                    uploadIcon.style.display = 'none';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Enter key to generate complaint
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                generateComplaint();
+            }
+        });
+    </script>
+</body>
+</html>
